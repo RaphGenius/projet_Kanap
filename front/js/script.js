@@ -4,9 +4,8 @@ fetch ("http://localhost:3000/api/products")
             return res.json() ;
         }
     })
-    // Creer un produit pour l'éléments produits
+    // Creer un produit 
     .then(function(products){
-        console.log(products);
         for(let i = 0; i < products.length; i++){
             const product = products[i];
             console.log(product);
@@ -20,13 +19,15 @@ fetch ("http://localhost:3000/api/products")
     })
 
     
-function canapCard (product) {
-    // LIEN VERS PRODUITS
+    // CREER UNE CARTE 
+ function canapCard (product) {
+    // Liens vers page produits
+
     let canapLink = document.createElement("a");
-    canapLink.setAttribute("href","./product.html?id=42");
+    canapLink.setAttribute("href",`./product.html?id=${product._id}`);
     let canapArticle = document.createElement("article");
 
-    //PHOTO
+    //photo
     let canapPict = document.createElement("img");
     canapPict.setAttribute("alt", product.altTxt); // attribut 
     canapPict.src = product.imageUrl;
@@ -37,12 +38,12 @@ function canapCard (product) {
     canapTitle.classList.add("productName")
     canapTitle.textContent = product.name
 
-    //DESCRIPTION
+    //description
     let canapDescription = document.createElement("p");
     canapDescription.classList.add("productDescription")
     canapDescription.textContent = product.description;
 
-    // AJOUT DES ELEMENTS
+    // ajout des éléments
     let canapSection = document.getElementById("items");
     canapSection.appendChild(canapLink);
     canapLink.appendChild(canapArticle)
@@ -50,9 +51,13 @@ function canapCard (product) {
     canapArticle.appendChild(canapPict);
     canapArticle.appendChild(canapTitle);
     canapArticle.appendChild(canapDescription);
-
-
 } 
 
+/* function lienProduits (product){
+   let str = "http://127.0.0.1:5501/front/html/product.html?id=42";
+   let url = new URL(str);
+   let idProduit = url.searchParams.get(product._id)
+   
+}
 
-
+ */
