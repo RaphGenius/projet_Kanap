@@ -1,28 +1,25 @@
+// Recuperer l'id de l'URL
 let url_str = window.location;
 let url = new URL(url_str);
 let search_params= url.searchParams;
 let productId = search_params.get('id');
 
 
-fetch ("http://localhost:3000/api/products")
+fetch (`http://localhost:3000/api/products/${productId}`)
     .then(function(res){
         if(res.ok){
             return res.json() ;
         }
     })
     // Creer un produit pour l'éléments produits
-    .then(function(products){ 
-        products.forEach(product => {
-            if(product._id === productId){
-                canapPresentation(product)
+    .then(function(product){ 
+        canapPresentation(product)
                 // Creer une option pour chaques couleurs
                 for(const color of product.colors){
                     colorChoice(color)
-                    console.log(color);
                 }
             }
-        });
-    })
+        )
     .catch(function(err){
         window.alert(`Pas de contact avec l'api.${err}`);
     })
@@ -56,10 +53,10 @@ function colorChoice (color){
 // Stocker les valeurs dans le localStorage
 ///////////////////////////////////////////////
 
-//Recuperer le panier
+// Recuperer le panier
 function getBasket (){
-    if (localStorage.getItem("produit")){
-        return JSON.parse(localStorage.getItem("produit"))
+    if (localStorage.getItem("produits")){
+        return JSON.parse(localStorage.getItem("produits"))
     } else {
         return []
     }
@@ -67,26 +64,49 @@ function getBasket (){
 
 // Ajout un produit/quantité/coleur à l'objet
 function addBasket (produit){
-    let panier = getBasket(produit)
-    panier.push(produit);
+    let panier = getBasket(produit);
+    let colorCanap = document.getElementById("colors").value;
+    let quantityCanap = document.getElementById("quantity").value;
+    // Evalue si un produit d'une même couleur se trouve dans le localStorage
+    let match = panier.find(element => {
+        if (productId == element.idCanap && colorCanap == element.colorCanap) {
+           return element;
+        }
+    })
+    if (match){
+        match.quantityCanap = parseInt(match.quantityCanap);
+        quantityCanap = parseInt(quantityCanap)
+        match.quantityCanap += quantityCanap;
+        console.log(`match quantité = ${match.quantityCanap}`);
+    } else {
+        panier.push(produit);
+    }
+    return panier;
 }
 
 // Envoie le panier dans le local storage
-function saveBasket (produit){
-    localStorage.setItem("produit", JSON.stringify(produit))
+function saveBasket (panier){
+    localStorage.setItem("produits", JSON.stringify(panier))
 }
 
 // Event au click - 
 document.getElementById("addToCart").addEventListener("click", () => {
+    let colorCanap = document.getElementById("colors").value;
+    let quantityCanap = document.getElementById("quantity").value;
+    if (quantityCanap <1  || quantityCanap > 100){   
+        window.alert("La quantité selectionnée est incorrecte");
+        return;
+    } 
+    if(!colorCanap){ // Si colorCanap est falsy 
+        window.alert("Veuillez selectionner une couleur");
+        return;
+    }
+
     let produitPanier = {
         idCanap : productId,
-        colorCanap : document.getElementById("colors").value,
-        quantityCanap : document.getElementById("quantity").value
+        colorCanap, // = colorCanap : colorCanap peut être écrit seul 
+        quantityCanap
     }
-    let arrProduit = [produitPanier]
-    console.log(produitPanier);
-    getBasket(arrProduit)
-    addBasket(arrProduit)
-    saveBasket(arrProduit)
-    console.log(arrProduit);
+    const panier = addBasket(produitPanier)
+    saveBasket(panier);
 })
