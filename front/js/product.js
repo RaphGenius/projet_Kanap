@@ -15,7 +15,7 @@ fetch ("http://localhost:3000/api/products")
         products.forEach(product => {
             if(product._id === productId){
                 canapPresentation(product)
-                console.log(product);
+                // Creer une option pour chaques couleurs
                 for(const color of product.colors){
                     colorChoice(color)
                     console.log(color);
@@ -52,3 +52,41 @@ function colorChoice (color){
     colorOpt.innerText = `${color}`
     document.getElementById("colors").appendChild(colorOpt);
 }
+
+// Stocker les valeurs dans le localStorage
+///////////////////////////////////////////////
+
+//Recuperer le panier
+function getBasket (){
+    if (localStorage.getItem("produit")){
+        return JSON.parse(localStorage.getItem("produit"))
+    } else {
+        return []
+    }
+}
+
+// Ajout un produit/quantité/coleur à l'objet
+function addBasket (produit){
+    let panier = getBasket(produit)
+    panier.push(produit);
+}
+
+// Envoie le panier dans le local storage
+function saveBasket (produit){
+    localStorage.setItem("produit", JSON.stringify(produit))
+}
+
+// Event au click - 
+document.getElementById("addToCart").addEventListener("click", () => {
+    let produitPanier = {
+        idCanap : productId,
+        colorCanap : document.getElementById("colors").value,
+        quantityCanap : document.getElementById("quantity").value
+    }
+    let arrProduit = [produitPanier]
+    console.log(produitPanier);
+    getBasket(arrProduit)
+    addBasket(arrProduit)
+    saveBasket(arrProduit)
+    console.log(arrProduit);
+})
