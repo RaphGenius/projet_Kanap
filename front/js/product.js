@@ -74,12 +74,15 @@ function addBasket (produit){
         }
     })
     if (match){
+        //Transformer les chaines de caractères en nombre
         match.quantityCanap = parseInt(match.quantityCanap);
         quantityCanap = parseInt(quantityCanap)
+        // Aditionne la quantité choisie avec la quantité du localStorage 
         match.quantityCanap += quantityCanap;
         console.log(`match quantité = ${match.quantityCanap}`);
     } else {
         panier.push(produit);
+        quantityCanap = parseInt(quantityCanap)
     }
     return panier;
 }
@@ -93,10 +96,12 @@ function saveBasket (panier){
 document.getElementById("addToCart").addEventListener("click", () => {
     let colorCanap = document.getElementById("colors").value;
     let quantityCanap = document.getElementById("quantity").value;
+    // Si la quantité est incorrecte
     if (quantityCanap <1  || quantityCanap > 100){   
         window.alert("La quantité selectionnée est incorrecte");
         return;
     } 
+    // Si aucune couleur n'est selectionnée
     if(!colorCanap){ // Si colorCanap est falsy 
         window.alert("Veuillez selectionner une couleur");
         return;

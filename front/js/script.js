@@ -52,12 +52,3 @@ fetch ("http://localhost:3000/api/products")
     canapArticle.appendChild(canapTitle);
     canapArticle.appendChild(canapDescription);
 } 
-
-/* function lienProduits (product){
-   let str = "http://127.0.0.1:5501/front/html/product.html?id=42";
-   let url = new URL(str);
-   let idProduit = url.searchParams.get(product._id)
-   
-}
-
- */
