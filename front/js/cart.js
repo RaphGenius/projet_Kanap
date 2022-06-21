@@ -3,9 +3,10 @@ fetch(`http://localhost:3000/api/products/`)
     if(res.ok){
         return res.json();
     }
-    
 })
-
+.catch(function(err){
+    window.alert(`Pas de contact avec l'api.${err}`);
+})
 // Création résume du panier 
 
 function resumePanier (){
@@ -14,8 +15,8 @@ function resumePanier (){
     //article
     let article = document.createElement("article")
     article.classList.add("cart__item")
-    article.setAttribute("data-id", "product-ID");  // CHANGER VALEUR !!
-    article.setAttribute("data-color","product-color"); // CHANGER VALEUR !!
+    article.setAttribute("data-id", `${produit.idCanap}`); 
+    article.setAttribute("data-color",`${produit.colorCanap}`);
 
     // Image 
     let divImage = document.createElement('div')
@@ -41,7 +42,8 @@ function resumePanier (){
     changeQuantity.setAttribute("name","itemQuantity")
     changeQuantity.setAttribute("min", "1")
     changeQuantity.setAttribute("max", "100")
-    changeQuantity.setAttribute("value", "42") // CHANGER VALEUR !!
+    changeQuantity.setAttribute("value", produit.quantityCanap) // CHANGER VALEUR !!
+    console.log(produit.quantityCanap);
     changeQuantity.classList.add("itemQuantity");
 
     // Suppression élément 
@@ -64,13 +66,19 @@ function resumePanier (){
     itemContent.appendChild(itemSettings);
     itemSettings.appendChild(itemQuantity);
     itemQuantity.appendChild(showQuantity);
-    showQuantity.textContent = `Qté : 50` // CHANGER VALEUR !!
+    showQuantity.textContent = `Qté :` // CHANGER VALEUR !!
     itemQuantity.appendChild(changeQuantity);
     itemSettings.appendChild(itemDelete);
     itemDelete.appendChild(buttonDelete)
 
-
-
 }
+// Affiche une carte par produit présent dans le local Storage
+function cartProduit (){
+    let produits = JSON.parse(localStorage.getItem("produits"));
+    for(produit of produits){
+        resumePanier(produit)
+    }
+}
+cartProduit();
 
-resumePanier()
+
