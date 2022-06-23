@@ -1,9 +1,9 @@
 const panier = JSON.parse(localStorage.getItem("produits"));
+let totalCanapQuantity = 0;
+let totalCanapPrice = 0
 for (let i = 0; i < panier.length; i++){
     const produitLs = panier[i];
-    console.log(produitLs);
     let produitComplet; 
-
     fetch("http://localhost:3000/api/products/"+produitLs.idCanap)
     .then(function(res){
         if(res.ok){
@@ -12,8 +12,11 @@ for (let i = 0; i < panier.length; i++){
     })
     .then((item)=> {
         produitComplet = {...produitLs, ...item}
-        console.log(produitComplet);
-        resumePanier(produitComplet)
+        resumePanier(produitComplet);  
+        quantityTotal(produitComplet);
+        
+        /* let quantity = document.getElementById("totalQuantity");
+        quantity.textContent = produitComplet.quantityCanap */
     })
     
     .catch(function(err){
@@ -21,17 +24,17 @@ for (let i = 0; i < panier.length; i++){
     })
 }
 
-// Affiche une carte par produit présent dans le local Storage
-function cartProduit (){
-    let produits = JSON.parse(localStorage.getItem("produits"));
-
-    for(produit of produits){
-        resumePanier(produit)
-    }
+// total des quantités de produit
+function quantityTotal (produitComplet) {
+    let showQuantity = document.getElementById("totalQuantity");
+    totalCanapQuantity += parseInt(produitComplet.quantityCanap) ;
+    console.log(totalCanapQuantity);
+    showQuantity.textContent = totalCanapQuantity
+    
 }
+function priceTotal(produitComplet){
 
-
-
+}
 
 // Création résume du panier 
 
@@ -68,7 +71,7 @@ function resumePanier (produitComplet){
     changeQuantity.setAttribute("name","itemQuantity")
     changeQuantity.setAttribute("min", "1")
     changeQuantity.setAttribute("max", "100")
-    changeQuantity.setAttribute("value", produitComplet.quantityCanap) // CHANGER VALEUR !!
+    changeQuantity.setAttribute("value", produitComplet.quantityCanap) 
     changeQuantity.classList.add("itemQuantity");
 
     // Suppression élément 
@@ -87,7 +90,7 @@ function resumePanier (produitComplet){
     itemDescription.innerHTML = 
     `<h2>${produitComplet.name}</h2> 
     <p>${produitComplet.colorCanap}</p>
-    <p>${""}</p>`// CHANGER VALEUR !! // CHANGER VALEUR !!
+    <p>${produitComplet.price}€</p>`// CHANGER VALEUR !! // CHANGER VALEUR !!
     itemContent.appendChild(itemSettings);
     itemSettings.appendChild(itemQuantity);
     itemQuantity.appendChild(showQuantity);
@@ -95,6 +98,5 @@ function resumePanier (produitComplet){
     itemQuantity.appendChild(changeQuantity);
     itemSettings.appendChild(itemDelete);
     itemDelete.appendChild(buttonDelete)
-
 }
 
