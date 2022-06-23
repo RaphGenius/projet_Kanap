@@ -1,28 +1,54 @@
-fetch(`http://localhost:3000/api/products/`)
-.then(function(res){
-    if(res.ok){
-        return res.json();
+const panier = JSON.parse(localStorage.getItem("produits"));
+for (let i = 0; i < panier.length; i++){
+    const produitLs = panier[i];
+    console.log(produitLs);
+    let produitComplet; 
+
+    fetch("http://localhost:3000/api/products/"+produitLs.idCanap)
+    .then(function(res){
+        if(res.ok){
+            return res.json();
+        }
+    })
+    .then((item)=> {
+        produitComplet = {...produitLs, ...item}
+        console.log(produitComplet);
+        resumePanier(produitComplet)
+    })
+    
+    .catch(function(err){
+        window.alert(`Pas de contact avec l'api.${err}`);
+    })
+}
+
+// Affiche une carte par produit présent dans le local Storage
+function cartProduit (){
+    let produits = JSON.parse(localStorage.getItem("produits"));
+
+    for(produit of produits){
+        resumePanier(produit)
     }
-})
-.catch(function(err){
-    window.alert(`Pas de contact avec l'api.${err}`);
-})
+}
+
+
+
+
 // Création résume du panier 
 
-function resumePanier (){
+function resumePanier (produitComplet){
     let section = document.getElementById("cart__items");
 
     //article
     let article = document.createElement("article")
     article.classList.add("cart__item")
-    article.setAttribute("data-id", `${produit.idCanap}`); 
-    article.setAttribute("data-color",`${produit.colorCanap}`);
+    article.setAttribute("data-id", `${produitComplet.idCanap}`);  // CHANGER VALEUR !!
+    article.setAttribute("data-color",`${produitComplet.colorCanap}`);// CHANGER VALEUR !!
 
     // Image 
     let divImage = document.createElement('div')
     let imgCanap = document.createElement("img")
     divImage.classList.add("cart__item__img")
-    imgCanap.setAttribute("src", "../images/banniere.png")// CHANGER VALEUR !!
+    imgCanap.setAttribute("src", produitComplet.imageUrl)// CHANGER VALEUR !!
     imgCanap.setAttribute("alt", "Photographie d'un canapé")
 
     // Description 
@@ -42,8 +68,7 @@ function resumePanier (){
     changeQuantity.setAttribute("name","itemQuantity")
     changeQuantity.setAttribute("min", "1")
     changeQuantity.setAttribute("max", "100")
-    changeQuantity.setAttribute("value", produit.quantityCanap) // CHANGER VALEUR !!
-    console.log(produit.quantityCanap);
+    changeQuantity.setAttribute("value", produitComplet.quantityCanap) // CHANGER VALEUR !!
     changeQuantity.classList.add("itemQuantity");
 
     // Suppression élément 
@@ -60,25 +85,16 @@ function resumePanier (){
     article.appendChild(itemContent);
     itemContent.appendChild(itemDescription);
     itemDescription.innerHTML = 
-    `<h2>Nom du produit</h2> 
-    <p>Vert</p>
-    <p>42,00 €</p>`// CHANGER VALEUR !!
+    `<h2>${produitComplet.name}</h2> 
+    <p>${produitComplet.colorCanap}</p>
+    <p>${""}</p>`// CHANGER VALEUR !! // CHANGER VALEUR !!
     itemContent.appendChild(itemSettings);
     itemSettings.appendChild(itemQuantity);
     itemQuantity.appendChild(showQuantity);
-    showQuantity.textContent = `Qté :` // CHANGER VALEUR !!
+    showQuantity.textContent = `Qté :` 
     itemQuantity.appendChild(changeQuantity);
     itemSettings.appendChild(itemDelete);
     itemDelete.appendChild(buttonDelete)
 
 }
-// Affiche une carte par produit présent dans le local Storage
-function cartProduit (){
-    let produits = JSON.parse(localStorage.getItem("produits"));
-    for(produit of produits){
-        resumePanier(produit)
-    }
-}
-cartProduit();
-
 
