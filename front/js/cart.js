@@ -14,7 +14,7 @@ for (let i = 0; i < panier.length; i++){
         produitComplet = {...produitLs, ...item}
         resumePanier(produitComplet);  
         quantityTotal(produitComplet);
-        
+        priceTotal(produitComplet)
         /* let quantity = document.getElementById("totalQuantity");
         quantity.textContent = produitComplet.quantityCanap */
     })
@@ -28,12 +28,14 @@ for (let i = 0; i < panier.length; i++){
 function quantityTotal (produitComplet) {
     let showQuantity = document.getElementById("totalQuantity");
     totalCanapQuantity += parseInt(produitComplet.quantityCanap) ;
-    console.log(totalCanapQuantity);
     showQuantity.textContent = totalCanapQuantity
     
 }
+// Prix total
 function priceTotal(produitComplet){
-
+    let showPrice = document.getElementById("totalPrice");
+    totalCanapPrice += produitComplet.price*produitComplet.quantityCanap;
+    showPrice.textContent = totalCanapPrice
 }
 
 // Création résume du panier 
