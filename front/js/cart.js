@@ -1,4 +1,4 @@
-const panier = JSON.parse(localStorage.getItem("produits"));
+let panier = JSON.parse(localStorage.getItem("produits"));
 let totalCanapQuantity = 0;
 let totalCanapPrice = 0
 for (let i = 0; i < panier.length; i++){
@@ -15,8 +15,8 @@ for (let i = 0; i < panier.length; i++){
         resumePanier(produitComplet);  
         quantityTotal(produitComplet);
         priceTotal(produitComplet)
-        /* let quantity = document.getElementById("totalQuantity");
-        quantity.textContent = produitComplet.quantityCanap */
+        quantityChange()
+        removeQuantity()
     })
     
     .catch(function(err){
@@ -31,7 +31,7 @@ function quantityTotal (produitComplet) {
     showQuantity.textContent = totalCanapQuantity
     
 }
-// Prix total
+// Prix total des produits
 function priceTotal(produitComplet){
     let showPrice = document.getElementById("totalPrice");
     totalCanapPrice += produitComplet.price*produitComplet.quantityCanap;
@@ -39,7 +39,6 @@ function priceTotal(produitComplet){
 }
 
 // Création résume du panier 
-
 function resumePanier (produitComplet){
     let section = document.getElementById("cart__items");
 
@@ -101,4 +100,41 @@ function resumePanier (produitComplet){
     itemSettings.appendChild(itemDelete);
     itemDelete.appendChild(buttonDelete)
 }
+
+function quantityChange (){
+    let quantityChange = document.querySelectorAll("input.itemQuantity")
+    for(let i = 0; i < quantityChange.length; i++){
+        quantityChange[i].addEventListener("change", (e) => {
+            console.log(quantityChange[i]);
+            let quantityChosen = panier[i].quantityCanap; 
+            let quantityValue = quantityChange[i].value;    
+
+            let quantityChanged = panier.find((element) => element.quantityValue != quantityChosen)
+            quantityChanged.quantityCanap = quantityValue;
+            localStorage.setItem("produits", JSON.stringify(panier))
+        })
+    }
+    
+
+}
+
+function removeQuantity(){
+    let btnRemove = document.getElementsByClassName("deleteItem");
+    console.log(btnRemove);
+    for(let i = 0; i < btnRemove.length; i++){
+        btnRemove[i].addEventListener("click", (e)=> {
+            console.log(btnRemove[i]);
+            /* let cart = document.getElementsByClassName("cart__item");
+            console.log(cart);
+            for(let i = 0; i < cart.length; i++){
+                let remove = cart[i]
+                console.log(remove);
+                remove.remove(); 
+            } */
+
+        })
+    }
+}
+
+
 
