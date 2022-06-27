@@ -15,8 +15,8 @@ for (let i = 0; i < panier.length; i++){
         resumePanier(produitComplet);  
         quantityTotal(produitComplet);
         priceTotal(produitComplet)
-        quantityChange()
         removeQuantity()
+        /* quantityChange() */
     })
     
     .catch(function(err){
@@ -99,42 +99,64 @@ function resumePanier (produitComplet){
     itemQuantity.appendChild(changeQuantity);
     itemSettings.appendChild(itemDelete);
     itemDelete.appendChild(buttonDelete)
+
+    
 }
 
-function quantityChange (){
+/* function quantityChange (){
     let quantityChange = document.querySelectorAll("input.itemQuantity")
     for(let i = 0; i < quantityChange.length; i++){
         quantityChange[i].addEventListener("change", (e) => {
-            console.log(quantityChange[i]);
+            console.log(e);
             let quantityChosen = panier[i].quantityCanap; 
-            let quantityValue = quantityChange[i].value;    
+            let quantityValue = e.target.value;    
 
             let quantityChanged = panier.find((element) => element.quantityValue != quantityChosen)
+            console.log(quantityChanged);
             quantityChanged.quantityCanap = quantityValue;
+            
             localStorage.setItem("produits", JSON.stringify(panier))
         })
     }
     
 
-}
+} */
 
-function removeQuantity(){
+
+/* function removeQuantity(){
     let btnRemove = document.getElementsByClassName("deleteItem");
-    console.log(btnRemove);
     for(let i = 0; i < btnRemove.length; i++){
+        console.log(btnRemove[i]);
+        console.log(btnRemove.length);
         btnRemove[i].addEventListener("click", (e)=> {
-            console.log(btnRemove[i]);
-            /* let cart = document.getElementsByClassName("cart__item");
+            console.log(e.value);
+            let cart = document.getElementsByClassName("cart__item");
             console.log(cart);
             for(let i = 0; i < cart.length; i++){
                 let remove = cart[i]
                 console.log(remove);
-                remove.remove(); 
-            } */
+                remove.closest(cart[i]); 
+            }
 
         })
     }
+} */
+
+
+
+function removeQuantity(){
+    let btnRemove = document.getElementsByClassName("deleteItem");
+    for(let i = 0; i < btnRemove.length; i++){
+       btnRemove[i].addEventListener("click", (remove))
+
+        }
+    }
+
+function remove(){
+    let article = document.querySelectorAll("article")
+    for(let i = 0; i < article.length; i++){
+        articleChose = article.closest("article")
+        articleChose.remove(article);
+    }
 }
-
-
 
