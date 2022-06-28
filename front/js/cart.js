@@ -19,6 +19,7 @@ for (let i = 0; i < panier.length; i++) {
       if (i === panier.length - 1) {
         removeQuantity();
         quantityChange();
+        testFormulaire();
       }
     })
 
@@ -141,4 +142,132 @@ function removeQuantity() {
       window.location.reload();
     });
   }
+}
+
+document.getElementById("order").addEventListener("input", () => {
+  for (let bollValue of bollValidation) {
+    if (bollValue) {
+      console.log(bollValue);
+      contact();
+    } else {
+      console.log("Les données sont pas true");
+      console.log(contact());
+    }
+  }
+});
+function contact() {
+  let prenom = document.getElementById("firstName");
+  let nom = document.getElementById("lastName");
+  let adresse = document.getElementById("address");
+  let ville = document.getElementById("firstName");
+  let email = document.getElementById("email");
+  const contact = {
+    firstName: prenom.value,
+    lastName: nom.value,
+    address: adresse.value,
+    city: ville.value,
+    email: email.value,
+  };
+  console.log(contact);
+  return contact;
+}
+
+let bollPrenom = false;
+let bollNom = false;
+let bollAdresse = false;
+let bollVille = false;
+let bollMail = false;
+
+function testFormulaire() {
+  let nameRegEx = new RegExp(`^[A-Za-z-\é\ê\è\ë\s]+$`);
+  let emailRegEx = new RegExp(`[a-z0-9]+@[a-z]+\.[a-z]{2,3}`, "g");
+  let adressRegEx = new RegExp(`^[a-zA-Z0-9\s\,\''\-\é\è\ï\ê\ë\ê ]*$`);
+  testMail(emailRegEx);
+  testPrenom(nameRegEx);
+  testNom(nameRegEx);
+  testAdresse(adressRegEx);
+  cityAdresse(nameRegEx);
+  let bollValidation = [bollPrenom, bollNom, bollAdresse, bollVille, bollMail];
+  console.log(bollValidation);
+  if (bollValidation.includes(false)) {
+    console.log("Des valeurs sont fausses");
+    return;
+  } else {
+    console.log("c'est bon!");
+    contact();
+  }
+}
+
+function testMail(emailRegEx) {
+  let mailUser = document.getElementById("email");
+  let validatorMailMsg = document.getElementById("emailErrorMsg");
+  mailUser.addEventListener("change", () => {
+    let testMail = emailRegEx.test(email.value);
+    if (testMail) {
+      validatorMailMsg.innerHTML = "Email Valide";
+      bollMail = true;
+    } else {
+      validatorMailMsg.innerHTML = "Email non valide";
+      bollMail = false;
+    }
+  });
+}
+
+function testPrenom(nameRegEx) {
+  let prenomUser = document.getElementById("firstName");
+  let validatorPrenomMsg = document.getElementById("firstNameErrorMsg");
+  prenomUser.addEventListener("change", () => {
+    let testPrenom = nameRegEx.test(prenomUser.value);
+    if (!testPrenom) {
+      validatorPrenomMsg.textContent = "Prenom non valide";
+      bollPrenom = false;
+    } else {
+      validatorPrenomMsg.textContent = "Prenom valide";
+      bollPrenom = true;
+    }
+  });
+}
+function testNom(nameRegEx) {
+  let nomUser = document.getElementById("lastName");
+  let validatorNomMsg = document.getElementById("lastNameErrorMsg");
+  nomUser.addEventListener("change", () => {
+    let testNom = nameRegEx.test(nomUser.value);
+    if (!testNom) {
+      validatorNomMsg.textContent = "nom non valide";
+      bollNom = false;
+    } else {
+      validatorNomMsg.textContent = "nom valide";
+      bollNom = true;
+    }
+  });
+}
+
+function testAdresse(adressRegEx) {
+  let adresseUser = document.getElementById("address");
+  let validatorAdresseMsg = document.getElementById("addressErrorMsg");
+  adresseUser.addEventListener("change", () => {
+    let testAdresse = adressRegEx.test(adresseUser.value);
+    if (!testAdresse) {
+      validatorAdresseMsg.textContent = "adresse non valide";
+      bollAdresse = false;
+    } else {
+      validatorAdresseMsg.textContent = "adresse valide";
+      bollAdresse = true;
+    }
+  });
+}
+
+function cityAdresse(nameRegEx) {
+  let villeUser = document.getElementById("city");
+  let validatorVilleMsg = document.getElementById("cityErrorMsg");
+  villeUser.addEventListener("change", () => {
+    let testVille = nameRegEx.test(villeUser.value);
+    if (!testVille) {
+      validatorVilleMsg.textContent = "Ville non valide";
+      bollVille = false;
+    } else {
+      validatorVilleMsg.textContent = "Ville valide";
+      bollVille = true;
+    }
+  });
 }
