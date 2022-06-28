@@ -144,15 +144,12 @@ function removeQuantity() {
   }
 }
 
-document.getElementById("order").addEventListener("input", () => {
-  for (let bollValue of bollValidation) {
-    if (bollValue) {
-      console.log(bollValue);
-      contact();
-    } else {
-      console.log("Les données sont pas true");
-      console.log(contact());
-    }
+document.getElementById("order").addEventListener("input", (e) => {
+  if (testFormulaire() === true) {
+    contact();
+  } else {
+    e.preventDefault();
+    e.stopPropagation();
   }
 });
 function contact() {
@@ -191,10 +188,9 @@ function testFormulaire() {
   console.log(bollValidation);
   if (bollValidation.includes(false)) {
     console.log("Des valeurs sont fausses");
-    return;
+    return false;
   } else {
-    console.log("c'est bon!");
-    contact();
+    return true;
   }
 }
 
