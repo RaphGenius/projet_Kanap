@@ -20,12 +20,37 @@ for (let i = 0; i < panier.length; i++) {
         removeQuantity();
         quantityChange();
         testFormulaire();
+        getIdProducts();
       }
     })
 
     .catch(function (err) {
       window.alert(`Pas de contact avec l'api.${err}`);
     });
+}
+
+function post() {
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ contact, products }),
+  }).then(function (response) {
+    /* window.location.href = `http://127.0.0.1:5501/front/html/confirmation.html?orderId=${response}`; */
+    console.log(response.orderID);
+    return response.json;
+  });
+}
+let products = [];
+function getIdProducts() {
+  let quantityChange = document.querySelectorAll("input.itemQuantity");
+  for (let i = 0; i < quantityChange.length; i++) {
+    const article = quantityChange[i].closest("article");
+    let idProduit = article.dataset.id;
+    products.push(idProduit);
+  }
 }
 
 // total des quantités de produit
@@ -144,31 +169,30 @@ function removeQuantity() {
   }
 }
 
-document.getElementById("order").addEventListener("input", (e) => {
-  if (testFormulaire() === true) {
-    contact();
-  } else {
-    e.preventDefault();
-    e.stopPropagation();
+document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (testFormulaire()) {
+    formInfo();
+    post();
   }
 });
-function contact() {
+
+let contact = {};
+function formInfo() {
   let prenom = document.getElementById("firstName");
   let nom = document.getElementById("lastName");
   let adresse = document.getElementById("address");
   let ville = document.getElementById("firstName");
   let email = document.getElementById("email");
-  const contact = {
+  contact = {
     firstName: prenom.value,
     lastName: nom.value,
     address: adresse.value,
     city: ville.value,
     email: email.value,
   };
-  console.log(contact);
   return contact;
 }
-
 let bollPrenom = false;
 let bollNom = false;
 let bollAdresse = false;
@@ -183,7 +207,7 @@ function testFormulaire() {
   testPrenom(nameRegEx);
   testNom(nameRegEx);
   testAdresse(adressRegEx);
-  cityAdresse(nameRegEx);
+  testCity(nameRegEx);
   let bollValidation = [bollPrenom, bollNom, bollAdresse, bollVille, bollMail];
   console.log(bollValidation);
   if (bollValidation.includes(false)) {
@@ -253,7 +277,7 @@ function testAdresse(adressRegEx) {
   });
 }
 
-function cityAdresse(nameRegEx) {
+function testCity(nameRegEx) {
   let villeUser = document.getElementById("city");
   let validatorVilleMsg = document.getElementById("cityErrorMsg");
   villeUser.addEventListener("change", () => {
