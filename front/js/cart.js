@@ -37,12 +37,21 @@ function post() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ contact, products }),
-  }).then(function (response) {
-    /* window.location.href = `http://127.0.0.1:5501/front/html/confirmation.html?orderId=${response}`; */
-    console.log(response.orderID);
-    return response.json;
-  });
+  })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then(function (response) {
+      window.location.href = `http://127.0.0.1:5501/front/html/confirmation.html?orderId=${response.orderId}`;
+      console.log(response.orderId);
+    })
+    .catch(function (err) {
+      window.alert(`Pas de contact avec l'api.${err}`);
+    });
 }
+
 let products = [];
 function getIdProducts() {
   let quantityChange = document.querySelectorAll("input.itemQuantity");
