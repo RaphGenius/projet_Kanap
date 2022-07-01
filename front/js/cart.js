@@ -29,6 +29,8 @@ for (let i = 0; i < panier.length; i++) {
     });
 }
 
+// Envoie les informations clients + produits
+// Envoie vers la page confirmation avec l'orderId dans l'url
 function post() {
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
@@ -51,7 +53,7 @@ function post() {
       window.alert(`Pas de contact avec l'api.${err}`);
     });
 }
-
+// Récupère les id présents dans les data id des produits dans le panier
 let products = [];
 function getIdProducts() {
   let quantityChange = document.querySelectorAll("input.itemQuantity");
@@ -137,6 +139,7 @@ function resumePanier(produitComplet) {
   itemDelete.appendChild(buttonDelete);
 }
 
+// Change la quantité des produits, les modifications se font sur le html et dans le localStorage
 function quantityChange() {
   let quantityChange = document.querySelectorAll("input.itemQuantity");
   for (let i = 0; i < quantityChange.length; i++) {
@@ -177,7 +180,7 @@ function removeQuantity() {
     });
   }
 }
-
+//Event formulaire, récupère les info du form et les envoies si le form est valide
 document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
   e.preventDefault();
   if (testFormulaire()) {
@@ -186,6 +189,7 @@ document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
   }
 });
 
+// Fonction qui envoie les informations du formulaire
 let contact = {};
 function formInfo() {
   let prenom = document.getElementById("firstName");
@@ -202,12 +206,14 @@ function formInfo() {
   };
   return contact;
 }
+
 let bollPrenom = false;
 let bollNom = false;
 let bollAdresse = false;
 let bollVille = false;
 let bollMail = false;
 
+// Teste tous les champs du formulaire, renvoie true si les infos respectent les regles des RegEx, renvoie false si un champ est inccorecte.
 function testFormulaire() {
   let nameRegEx = new RegExp(`^[A-Za-z-\é\ê\è\ë\s]+$`);
   let emailRegEx = new RegExp(`[a-z0-9]+@[a-z]+\.[a-z]{2,3}`, "g");
@@ -219,6 +225,7 @@ function testFormulaire() {
   testCity(nameRegEx);
   let bollValidation = [bollPrenom, bollNom, bollAdresse, bollVille, bollMail];
   console.log(bollValidation);
+  // Si un false se trouve dans le tableau, renvoie false et le formulaire ne peut pas s'envoyer
   if (bollValidation.includes(false)) {
     console.log("Des valeurs sont fausses");
     return false;
@@ -226,7 +233,7 @@ function testFormulaire() {
     return true;
   }
 }
-
+// Test la validité de l'adresse mail
 function testMail(emailRegEx) {
   let mailUser = document.getElementById("email");
   let validatorMailMsg = document.getElementById("emailErrorMsg");
@@ -241,7 +248,7 @@ function testMail(emailRegEx) {
     }
   });
 }
-
+// Test la validité du prénom
 function testPrenom(nameRegEx) {
   let prenomUser = document.getElementById("firstName");
   let validatorPrenomMsg = document.getElementById("firstNameErrorMsg");
@@ -256,6 +263,7 @@ function testPrenom(nameRegEx) {
     }
   });
 }
+// Test la validité du nom
 function testNom(nameRegEx) {
   let nomUser = document.getElementById("lastName");
   let validatorNomMsg = document.getElementById("lastNameErrorMsg");
@@ -270,7 +278,7 @@ function testNom(nameRegEx) {
     }
   });
 }
-
+// Test la validité de l'adresse'
 function testAdresse(adressRegEx) {
   let adresseUser = document.getElementById("address");
   let validatorAdresseMsg = document.getElementById("addressErrorMsg");
@@ -285,7 +293,7 @@ function testAdresse(adressRegEx) {
     }
   });
 }
-
+// Test la validité de la ville
 function testCity(nameRegEx) {
   let villeUser = document.getElementById("city");
   let validatorVilleMsg = document.getElementById("cityErrorMsg");
