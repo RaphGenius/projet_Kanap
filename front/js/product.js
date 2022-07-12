@@ -4,6 +4,7 @@ let url = new URL(url_str);
 let search_params = url.searchParams;
 let productId = search_params.get("id");
 
+// appel a l'api
 fetch(`http://localhost:3000/api/products/${productId}`)
   .then(function (res) {
     if (res.ok) {

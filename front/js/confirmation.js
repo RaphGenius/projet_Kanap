@@ -6,3 +6,5 @@ let productId = search_params.get("orderId");
 
 // Ecrit l'idOrder récuperer pour l'afficher
 document.getElementById("orderId").textContent = productId;
+// Supprimer les éléments du LS
+localStorage.clear();

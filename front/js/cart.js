@@ -2,33 +2,34 @@ let panier = JSON.parse(localStorage.getItem("produits"));
 let totalCanapQuantity = 0;
 let totalCanapPrice = 0;
 
-for (let i = 0; i < panier.length; i++) {
-  const produitLs = panier[i];
-  let produitComplet;
-  fetch("http://localhost:3000/api/products/" + produitLs.idCanap)
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-    })
-    .then((item) => {
-      produitComplet = { ...produitLs, ...item };
-      resumePanier(produitComplet);
-      quantityTotal(produitComplet);
-      priceTotal(produitComplet);
-      if (i === panier.length - 1) {
-        removeQuantity();
-        quantityChange();
-        testFormulaire();
-        getIdProducts();
-      }
-    })
+if (panier) {
+  for (let i = 0; i < panier.length; i++) {
+    const produitLs = panier[i];
+    let produitComplet;
+    fetch("http://localhost:3000/api/products/" + produitLs.idCanap)
+      .then(function (res) {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((item) => {
+        produitComplet = { ...produitLs, ...item };
+        resumePanier(produitComplet);
+        quantityTotal(produitComplet);
+        priceTotal(produitComplet);
+        if (i === panier.length - 1) {
+          removeQuantity();
+          quantityChange();
+          testFormulaire();
+          getIdProducts();
+        }
+      })
 
-    .catch(function (err) {
-      window.alert(`Pas de contact avec l'api.${err}`);
-    });
+      .catch(function (err) {
+        window.alert(`Pas de contact avec l'api.${err}`);
+      });
+  }
 }
-
 // Envoie les informations clients + produits
 // Envoie vers la page confirmation avec l'orderId dans l'url
 function post() {
@@ -44,10 +45,9 @@ function post() {
       if (res.ok) {
         return res.json();
       }
-    })
+    }) // Envoi à la page confirmation
     .then(function (response) {
-      window.location.href = `http://127.0.0.1:5501/front/html/confirmation.html?orderId=${response.orderId}`;
-      console.log(response.orderId);
+      window.location.href = `../html/confirmation.html?orderId=${response.orderId}`;
     })
     .catch(function (err) {
       window.alert(`Pas de contact avec l'api.${err}`);
@@ -189,7 +189,7 @@ document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
   }
 });
 
-// Fonction qui envoie les informations du formulaire
+// Fonction qui renvoie envoie les informations du formulaire
 let contact = {};
 function formInfo() {
   let prenom = document.getElementById("firstName");
@@ -206,7 +206,7 @@ function formInfo() {
   };
   return contact;
 }
-
+// Variables qui sont dans un tableau, seront true si la condition est remplie (champ du formulaire valide)
 let bollPrenom = false;
 let bollNom = false;
 let bollAdresse = false;
@@ -215,7 +215,7 @@ let bollMail = false;
 
 // Teste tous les champs du formulaire, renvoie true si les infos respectent les regles des RegEx, renvoie false si un champ est inccorecte.
 function testFormulaire() {
-  let nameRegEx = new RegExp(`^[A-Za-z-\é\ê\è\ë\s]+$`);
+  let nameRegEx = new RegExp(`^[A-Za-z-\é\ê\è\ë\s\']+$`);
   let emailRegEx = new RegExp(`[a-z0-9]+@[a-z]+\.[a-z]{2,3}`, "g");
   let adressRegEx = new RegExp(`^[a-zA-Z0-9\s\,\''\-\é\è\ï\ê\ë\ê ]*$`);
   testMail(emailRegEx);
@@ -224,10 +224,8 @@ function testFormulaire() {
   testAdresse(adressRegEx);
   testCity(nameRegEx);
   let bollValidation = [bollPrenom, bollNom, bollAdresse, bollVille, bollMail];
-  console.log(bollValidation);
   // Si un false se trouve dans le tableau, renvoie false et le formulaire ne peut pas s'envoyer
   if (bollValidation.includes(false)) {
-    console.log("Des valeurs sont fausses");
     return false;
   } else {
     return true;
